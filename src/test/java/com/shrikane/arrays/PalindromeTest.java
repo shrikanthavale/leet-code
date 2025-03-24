@@ -28,13 +28,17 @@ class PalindromeTest {
 
     @Test
     void testIsPalindrome_withMixedCaseStrings() {
-        assertFalse(palindrome.isPalindrome("Madam"), "The check is case-sensitive. 'Madam' is not considered a palindrome.");
-        assertFalse(palindrome.isPalindrome("RaceCar"), "The check is case-sensitive. 'RaceCar' is not considered a palindrome.");
+        assertFalse(palindrome.isPalindrome("Madam"),
+            "The check is case-sensitive. 'Madam' is not considered a palindrome.");
+        assertFalse(palindrome.isPalindrome("RaceCar"),
+            "The check is case-sensitive. 'RaceCar' is not considered a palindrome.");
     }
 
     @Test
     void testIsPalindrome_withSpecialCharacters() {
-        assertFalse(palindrome.isPalindrome("madam!"), "The string 'madam!' is not a palindrome due to the special character.");
-        assertFalse(palindrome.isPalindrome("!madam"), "The string '!madam' is not a palindrome due to the added special character.");
+        assertFalse(palindrome.isPalindrome("madam!"),
+            "The string 'madam!' is not a palindrome due to the special character.");
+        assertFalse(palindrome.isPalindrome("!madam"),
+            "The string '!madam' is not a palindrome due to the added special character.");
     }
 }

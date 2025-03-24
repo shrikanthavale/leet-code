@@ -29,7 +29,7 @@ class SumSortedArrayTest {
             "There are no two numbers that sum up to 10.");
         assertFalse(sumSortedArray.targetMatchesSum(new int[] {-3, -2, 0, 1, 2, 5}, 8),
             "There are no two numbers that sum up to 8.");
-        assertFalse(sumSortedArray.targetMatchesSum(new int[] {1, 3, 5, 7, 9}, 4),
+        assertFalse(sumSortedArray.targetMatchesSum(new int[] {1, 2, 5, 7, 9}, 4),
             "There are no two numbers that sum up to 4.");
     }
 
@@ -61,8 +61,8 @@ class SumSortedArrayTest {
         for (int i = 0; i < nums.length; i++) {
             nums[i] = i;
         }
-        assertTrue(sumSortedArray.targetMatchesSum(nums, 1998),
-            "The numbers 999 and 999 in the large array sum to 1998.");
+        assertTrue(sumSortedArray.targetMatchesSum(nums, 998),
+            "The numbers 997 and 1 in the large array sum to 1998.");
         assertFalse(sumSortedArray.targetMatchesSum(nums, 2001), "No two numbers in the array sum to 2001.");
     }
 }

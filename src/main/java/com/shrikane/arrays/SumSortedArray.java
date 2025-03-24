@@ -1,5 +1,7 @@
 package com.shrikane.arrays;
 
+import java.util.Arrays;
+
 /**
  * The SumSortedArray class provides a method to determine if there are two numbers
  * in a sorted array that sum up to a given target value.

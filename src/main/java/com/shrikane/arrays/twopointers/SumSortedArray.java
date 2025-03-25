@@ -1,4 +1,4 @@
-package com.shrikane.arrays;
+package com.shrikane.arrays.twopointers;
 
 /**
  * The SumSortedArray class provides a method to determine if there are two numbers

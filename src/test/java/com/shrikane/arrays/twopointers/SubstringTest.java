@@ -1,4 +1,4 @@
-package com.shrikane.arrays;
+package com.shrikane.arrays.twopointers;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +10,7 @@ class SubstringTest {
         String subString = "sub";
         String originalString = "this is a substring";
         
-        assertTrue(Substring.isSubstring(subString, originalString), 
+        assertTrue(Substring.isSubstring(subString, originalString),
                    "The method should return true for a valid substring.");
     }
 

@@ -1,4 +1,4 @@
-package com.shrikane.arrays;
+package com.shrikane.arrays.twopointers;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

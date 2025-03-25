@@ -1,4 +1,4 @@
-package com.shrikane.arrays;
+package com.shrikane.arrays.twopointers;
 
 /**
  * The Substring class provides a method to check if one string is a substring of another string.

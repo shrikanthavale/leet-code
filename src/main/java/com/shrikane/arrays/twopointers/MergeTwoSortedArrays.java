@@ -1,4 +1,4 @@
-package com.shrikane.arrays;
+package com.shrikane.arrays.twopointers;
 
 /**
  * The MergeTwoSortedArrays class provides a method to merge two sorted arrays into a single sorted array.

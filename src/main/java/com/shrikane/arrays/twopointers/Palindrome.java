@@ -1,4 +1,4 @@
-package com.shrikane.arrays;
+package com.shrikane.arrays.twopointers;
 
 /**
  * The Palindrome class provides a method to check if a given string is a palindrome.

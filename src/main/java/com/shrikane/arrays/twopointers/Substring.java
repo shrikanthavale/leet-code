@@ -16,7 +16,7 @@ public class Substring {
      * in the given original string in the same order as they appear in the smaller string.
      *
      * @param subStringToCheck the string to check whether it is a substring
-     * @param originalString the string in which to search for the substring
+     * @param originalString   the string in which to search for the substring
      * @return true if the subStringToCheck is a substring of originalString, false otherwise
      */
     public static boolean isSubstring(final String subStringToCheck, final String originalString) {
@@ -40,7 +40,7 @@ public class Substring {
                 j++;
             }
 
-            if (i == subStringToCheck.length()-1) {
+            if (i == subStringToCheck.length() - 1) {
                 return true;
             }
         }

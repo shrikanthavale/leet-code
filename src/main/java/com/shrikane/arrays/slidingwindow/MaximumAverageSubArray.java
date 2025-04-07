@@ -11,6 +11,13 @@ public class MaximumAverageSubArray {
     private MaximumAverageSubArray() {
     }
 
+    /**
+     * Find a contiguous subarray whose length is equal to k that has the maximum average value and return this value.
+     *
+     * @param nums array
+     * @param k    length
+     * @return average.
+     */
     public static double findMaxAverage(int[] nums, int k) {
         int left = 0;
         int right = 0;

@@ -1,0 +1,301 @@
+[
+  {
+    "name": "test_client.Cases.test_register_invoices",
+    "description": "Atomically registers an initial batch of open invoices.",
+    "events": [
+      {
+        "id": 1,
+        "method": "new",
+        "args": [],
+        "result": null
+      },
+      {
+        "id": 1,
+        "method": "register_invoices",
+        "args": [
+          [
+            "INV-1, 2026-03-01, 100",
+            "INV-2, 2026-04-01, 200"
+          ]
+        ],
+        "result": [
+          201,
+          {
+            "registered_count": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "test_client.Cases.test_tier1_id_match",
+    "description": "Resolves Tier 1 marker even when the payment amount differs.",
+    "events": [
+      {
+        "id": 1,
+        "method": "new",
+        "args": [],
+        "result": null
+      },
+      {
+        "id": 1,
+        "method": "register_invoices",
+        "args": [
+          [
+            "INV-7, 2026-03-01, 250",
+            "INV-3, 2026-02-01, 100"
+          ]
+        ],
+        "result": [
+          201,
+          {
+            "registered_count": 2
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "method": "reconcile_payment",
+        "args": [
+          "pay_1, 100, paying for: INV-7",
+          0,
+          null
+        ],
+        "result": [
+          201,
+          {
+            "status": "MATCHED",
+            "payment_id": "pay_1",
+            "settled_invoice_id": "INV-7",
+            "tier_used": "id",
+            "message": "Payment pay_1 paid 100 for invoice INV-7 due on 2026-03-01"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "test_client.Cases.test_tier2_exact_amount",
+    "description": "Resolves Tier 2 exact match and breaks date ties by earliest date.",
+    "events": [
+      {
+        "id": 1,
+        "method": "new",
+        "args": [],
+        "result": null
+      },
+      {
+        "id": 1,
+        "method": "register_invoices",
+        "args": [
+          [
+            "INV-9, 2026-04-01, 100",
+            "INV-4, 2026-01-15, 100"
+          ]
+        ],
+        "result": [
+          201,
+          {
+            "registered_count": 2
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "method": "reconcile_payment",
+        "args": [
+          "pay_2, 100, March rent, thanks",
+          0,
+          null
+        ],
+        "result": [
+          201,
+          {
+            "status": "MATCHED",
+            "payment_id": "pay_2",
+            "settled_invoice_id": "INV-4",
+            "tier_used": "exact",
+            "message": "Payment pay_2 paid 100 for invoice INV-4 due on 2026-01-15"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "test_client.Cases.test_tier3_fuzzy_match",
+    "description": "Resolves Tier 3 fuzzy match within inclusive forgiveness tolerance.",
+    "events": [
+      {
+        "id": 1,
+        "method": "new",
+        "args": [],
+        "result": null
+      },
+      {
+        "id": 1,
+        "method": "register_invoices",
+        "args": [
+          [
+            "INV-1, 2026-05-01, 100",
+            "INV-2, 2026-06-01, 130"
+          ]
+        ],
+        "result": [
+          201,
+          {
+            "registered_count": 2
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "method": "reconcile_payment",
+        "args": [
+          "pay_3, 98, bank transfer",
+          2,
+          null
+        ],
+        "result": [
+          201,
+          {
+            "status": "MATCHED",
+            "payment_id": "pay_3",
+            "settled_invoice_id": "INV-1",
+            "tier_used": "fuzzy",
+            "message": "Payment pay_3 paid 98 for invoice INV-1 due on 2026-05-01"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "test_client.Cases.test_transactional_batch",
+    "description": "A later invalid payment undoes the earlier settlement in the same batch.",
+    "events": [
+      {
+        "id": 1,
+        "method": "new",
+        "args": [],
+        "result": null
+      },
+      {
+        "id": 1,
+        "method": "register_invoices",
+        "args": [
+          [
+            "a, 2026-01-01, 10"
+          ]
+        ],
+        "result": [
+          201,
+          {
+            "registered_count": 1
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "method": "reconcile_batch",
+        "args": [
+          [
+            {
+              "payment": "p, 10",
+              "key": "k"
+            },
+            {
+              "payment": "bad"
+            }
+          ]
+        ],
+        "error": {
+          "type": "ServiceError",
+          "message": "invalid_input",
+          "status": 400,
+          "code": "invalid_input"
+        }
+      },
+      {
+        "id": 1,
+        "method": "list_invoices",
+        "args": [],
+        "result": [
+          200,
+          [
+            {
+              "invoice_id": "a",
+              "due_date": "2026-01-01",
+              "amount_cents": 10,
+              "status": "UNPAID",
+              "settled_by_payment_id": null
+            }
+          ]
+        ]
+      },
+      {
+        "id": 1,
+        "method": "reconcile_payment",
+        "args": [
+          "q, 10",
+          0,
+          "k"
+        ],
+        "result": [
+          201,
+          {
+            "status": "MATCHED",
+            "payment_id": "q",
+            "settled_invoice_id": "a",
+            "tier_used": "exact",
+            "message": "Payment q paid 10 for invoice a due on 2026-01-01"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "test_client.Cases.test_unmatched_payment",
+    "description": "Returns 200 with UNMATCHED status when no invoice matches.",
+    "events": [
+      {
+        "id": 1,
+        "method": "new",
+        "args": [],
+        "result": null
+      },
+      {
+        "id": 1,
+        "method": "register_invoices",
+        "args": [
+          [
+            "INV-1, 2026-05-01, 100"
+          ]
+        ],
+        "result": [
+          201,
+          {
+            "registered_count": 1
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "method": "reconcile_payment",
+        "args": [
+          "pay_4, 500, no match here",
+          0,
+          null
+        ],
+        "result": [
+          200,
+          {
+            "status": "UNMATCHED",
+            "payment_id": "pay_4",
+            "settled_invoice_id": null,
+            "tier_used": null,
+            "message": "Payment pay_4 could not be matched to any invoice"
+          }
+        ]
+      }
+    ]
+  }
+]
